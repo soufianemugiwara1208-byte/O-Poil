@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commande confirmée — O'poil.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: #f4faf4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #333;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 60px 50px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(76, 175, 80, 0.12);
+      animation: fadeUp 0.5s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      background: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      animation: pop 0.4s ease 0.2s both;
+    }
+
+    @keyframes pop {
+      0%   { transform: scale(0.5); opacity: 0; }
+      70%  { transform: scale(1.1); }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+
+    .checkmark svg {
+      width: 40px;
+      height: 40px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logo {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      color: #4CAF50;
+      font-weight: 700;
+      margin-bottom: 30px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 14px;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+
+    .info-box {
+      background: #f4faf4;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 30px;
+      text-align: left;
+      font-size: 0.92rem;
+      color: #444;
+      line-height: 1.8;
+    }
+
+    .info-box span {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .info-box span:last-child { margin-bottom: 0; }
+
+    .info-box .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+
+    .btn-retour {
+      display: inline-block;
+      background: #4CAF50;
+      color: white;
+      padding: 14px 36px;
+      border-radius: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.25s, transform 0.2s;
+    }
+
+    .btn-retour:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      font-size: 0.82rem;
+      color: #aaa;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 40px 24px; }
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">🐾 O'poil.com</div>
+
+    <div class="checkmark">
+      <svg viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+
+    <h1>Merci pour votre commande !</h1>
+    <p class="subtitle">
+      Votre paiement a bien été reçu. Nous préparons votre commande avec soin pour le bien-être de votre compagnon.
+    </p>
+
+    <div class="info-box">
+      <span><span class="icon">📧</span> Un email de confirmation vous sera envoyé sous peu.</span>
+      <span><span class="icon">🚚</span> Livraison estimée : 15 à 25 jours ouvrés.</span>
+      <span><span class="icon">💬</span> Une question ? Écrivez-nous à <strong>opoil.question@gmail.com</strong></span>
+    </div>
+
+    <a href="/index.html" class="btn-retour">← Retour à la boutique</a>
+
+    <p class="footer-note">© 2026 O'poil.com — Tous droits réservés</p>
+  </div>
+</body>
+</html>
