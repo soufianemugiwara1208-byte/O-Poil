@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O'poil.com - Bien-être Animal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=AYTiTe_Og2PPW3tNvpVw20BpCpGv5SHwAMTNmlUBHlvWP5C4UKDTDfVFqAtmunpLLNR1GG7eczOZvc-H&currency=EUR&intent=capture&enable-funding=venmo,card,paylater,paypal"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #F5F5F5;
+            --text-color: #333;
+            --light-text: #666;
+            --white: #FFFFFF;
+            --border-color: #DDD;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Open Sans',sans-serif; }
+        body { color:var(--text-color); line-height:1.6; background:var(--white); }
+        .container { width:100%; max-width:1200px; margin:0 auto; padding:0 20px; }
+        a { text-decoration:none; color:var(--primary-color); }
+        .btn { display:inline-block; background:var(--primary-color); color:var(--white); padding:10px 20px; border:none; border-radius:5px; cursor:pointer; font-family:'Montserrat',sans-serif; font-weight:600; transition:all 0.3s; text-align:center; }
+        .btn:hover { background:#45a049; }
+
+        /* HEADER */
+        .header { background:var(--white); box-shadow:var(--shadow); padding:15px 0; position:sticky; top:0; z-index:100; }
+        .header .container { display:flex; justify-content:space-between; align-items:center; }
+        .logo h1 { font-family:'Montserrat',sans-serif; font-size:1.5rem; color:var(--primary-color); display:flex; align-items:center; gap:10px; }
+        .nav ul { display:flex; gap:20px; list-style:none; }
+        .nav a { color:var(--text-color); font-weight:600; }
+        .header-icons a { color:var(--text-color); font-size:1.2rem; position:relative; }
+        .header-icons #cart-count { position:absolute; top:-10px; right:-10px; background:var(--primary-color); color:var(--white); border-radius:50%; width:20px; height:20px; display:flex; justify-content:center; align-items:center; font-size:0.7rem; }
+
+        /* HERO */
+        .hero { background:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover; color:var(--white); padding:100px 0; text-align:center; }
+        .hero-content { max-width:800px; margin:0 auto; }
+        .hero h2 { font-family:'Montserrat',sans-serif; font-size:2.5rem; margin-bottom:20px; }
+        .hero p { font-size:1.2rem; margin-bottom:30px; }
+
+        /* SECTIONS */
+        .section { padding:60px 0; }
+        .section > .container > h2 { text-align:center; font-family:'Montserrat',sans-serif; font-size:2rem; margin-bottom:40px; color:var(--primary-color); }
+
+        /* GRILLE PRODUITS */
+        .produits-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:30px; }
+        .produit-card { background:var(--white); border-radius:12px; box-shadow:var(--shadow); overflow:hidden; transition:transform 0.3s,box-shadow 0.3s; cursor:pointer; }
+        .produit-card:hover { transform:translateY(-8px); box-shadow:0 8px 25px rgba(0,0,0,0.15); }
+        .card-img-wrap { width:100%; height:250px; overflow:hidden; background:#f8f8f8; display:flex; align-items:center; justify-content:center; }
+        .card-img-wrap img { width:100%; height:100%; object-fit:contain; padding:12px; transition:transform 0.4s; }
+        .produit-card:hover .card-img-wrap img { transform:scale(1.06); }
+        .card-body { padding:18px 20px 20px; }
+        .card-body h3 { font-family:'Montserrat',sans-serif; font-size:1.05rem; margin-bottom:6px; }
+        .card-body .desc-courte { font-size:0.83rem; color:var(--light-text); line-height:1.5; margin-bottom:12px; }
+        .card-body .prix { font-weight:700; color:var(--primary-color); font-size:1.15rem; margin-bottom:14px; }
+        .card-btns { display:flex; gap:10px; }
+        .btn-voir { flex:1; background:transparent; color:var(--primary-color); border:2px solid var(--primary-color); padding:9px 12px; border-radius:7px; font-family:'Montserrat',sans-serif; font-weight:600; font-size:0.88rem; cursor:pointer; transition:all 0.25s; }
+        .btn-voir:hover { background:var(--primary-color); color:white; }
+        .btn-panier { flex:1.4; background:var(--primary-color); color:white; border:none; padding:9px 12px; border-radius:7px; font-family:'Montserrat',sans-serif; font-weight:600; font-size:0.88rem; cursor:pointer; transition:background 0.25s; }
+        .btn-panier:hover { background:#45a049; }
+
+        /* MODAL FICHE PRODUIT */
+        .modal-produit-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:400; justify-content:center; align-items:center; padding:20px; }
+        .modal-produit-overlay.open { display:flex; }
+        .modal-produit { background:white; border-radius:16px; max-width:700px; width:100%; max-height:90vh; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr; box-shadow:0 30px 80px rgba(0,0,0,0.35); animation:slideUp 0.3s ease; position:relative; }
+        @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+        .modal-produit-img { overflow:hidden; border-radius:16px 0 0 16px; min-height:320px; background:#f8f8f8; display:flex; align-items:center; justify-content:center; }
+        .modal-produit-img img { width:100%; height:100%; object-fit:contain; padding:20px; }
+        .modal-produit-body { padding:35px 30px; display:flex; flex-direction:column; gap:15px; }
+        .btn-close-modal { position:absolute; top:15px; right:18px; background:rgba(0,0,0,0.12); border:none; border-radius:50%; width:36px; height:36px; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#333; transition:background 0.2s; z-index:10; }
+        .btn-close-modal:hover { background:rgba(0,0,0,0.25); }
+        .modal-produit-badge { display:inline-block; background:#e8f5e9; color:var(--primary-color); font-size:0.78rem; font-weight:700; padding:4px 12px; border-radius:20px; width:fit-content; }
+        .modal-produit-body h2 { font-family:'Montserrat',sans-serif; font-size:1.4rem; line-height:1.3; }
+        .modal-produit-prix { font-family:'Montserrat',sans-serif; font-size:2rem; font-weight:700; color:var(--primary-color); }
+        .modal-produit-desc { font-size:0.95rem; color:var(--light-text); line-height:1.7; }
+        .btn-panier-modal { background:var(--primary-color); color:white; border:none; padding:14px 20px; border-radius:9px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:1rem; cursor:pointer; transition:background 0.3s; margin-top:auto; }
+        .btn-panier-modal:hover { background:#45a049; }
+
+        /* PANIER SIDEBAR */
+        .panier-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; }
+        .panier-overlay.open { display:block; }
+        .panier-sidebar { position:fixed; top:0; right:-420px; width:420px; max-width:100vw; height:100%; background:white; z-index:201; display:flex; flex-direction:column; box-shadow:-5px 0 30px rgba(0,0,0,0.2); transition:right 0.35s cubic-bezier(.4,0,.2,1); }
+        .panier-sidebar.open { right:0; }
+        .panier-sidebar-header { display:flex; justify-content:space-between; align-items:center; padding:20px 25px; border-bottom:1px solid var(--border-color); background:var(--primary-color); color:white; }
+        .panier-sidebar-header h3 { font-family:'Montserrat',sans-serif; font-size:1.2rem; }
+        .btn-fermer-panier { background:none; border:none; color:white; font-size:1.6rem; cursor:pointer; line-height:1; }
+        .panier-sidebar-body { flex:1; overflow-y:auto; padding:20px 25px; }
+        .panier-vide-msg { text-align:center; color:var(--light-text); margin-top:60px; }
+        .panier-vide-msg i { font-size:3rem; display:block; margin-bottom:15px; color:#ddd; }
+        .panier-item { display:flex; gap:15px; align-items:center; padding:15px 0; border-bottom:1px solid #f0f0f0; }
+        .panier-item img { width:70px; height:70px; object-fit:cover; border-radius:8px; flex-shrink:0; }
+        .panier-item-info { flex:1; }
+        .panier-item-info h4 { font-family:'Montserrat',sans-serif; font-size:0.9rem; margin-bottom:5px; }
+        .panier-item-info .item-prix { color:var(--primary-color); font-weight:600; font-size:0.95rem; }
+        .qty-control { display:flex; align-items:center; gap:8px; margin-top:8px; }
+        .qty-control button { width:28px; height:28px; border:1px solid var(--border-color); background:white; border-radius:6px; cursor:pointer; font-size:1rem; font-weight:600; transition:all 0.2s; display:flex; align-items:center; justify-content:center; }
+        .qty-control button:hover { background:var(--primary-color); color:white; border-color:var(--primary-color); }
+        .qty-control span { min-width:25px; text-align:center; font-weight:600; }
+        .btn-supprimer-item { background:none; border:none; color:#f44336; cursor:pointer; font-size:1.1rem; padding:5px; flex-shrink:0; }
+        .panier-sidebar-footer { padding:20px 25px; border-top:2px solid var(--border-color); background:#fafafa; }
+        .panier-total-ligne { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
+        .panier-total-ligne span:first-child { font-family:'Montserrat',sans-serif; font-weight:600; font-size:1.1rem; }
+        .panier-total-ligne .montant { font-family:'Montserrat',sans-serif; font-weight:700; font-size:1.3rem; color:var(--primary-color); }
+        .btn-checkout-panier { width:100%; background:var(--primary-color); color:white; border:none; padding:14px; border-radius:8px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:1rem; cursor:pointer; transition:background 0.3s; }
+        .btn-checkout-panier:hover { background:#45a049; }
+
+        /* CHECKOUT */
+        .checkout-section { background:#f9f9f9; border-radius:12px; padding:35px; margin-top:30px; border:2px solid var(--primary-color); }
+        .checkout-section h3 { font-family:'Montserrat',sans-serif; color:var(--primary-color); margin-bottom:25px; font-size:1.4rem; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+        .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:15px; }
+        .form-group label { font-weight:600; font-size:0.88rem; }
+        .form-group input, .form-group select { padding:11px 14px; border:1px solid var(--border-color); border-radius:8px; font-size:0.97rem; font-family:'Open Sans',sans-serif; background:white; transition:border 0.2s; }
+        .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--primary-color); box-shadow:0 0 0 3px rgba(76,175,80,0.15); }
+        .btn-payer { width:100%; background:var(--primary-color); color:white; border:none; padding:15px; border-radius:8px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:1.05rem; cursor:pointer; margin-top:10px; transition:background 0.3s; }
+        .btn-payer:hover { background:#45a049; }
+
+        /* MODAL CONFIRMATION */
+        .modal-confirmation-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); z-index:500; justify-content:center; align-items:center; }
+        .modal-confirmation-overlay.visible { display:flex; }
+        .modal-box { background:white; border-radius:16px; padding:45px 40px; max-width:520px; width:92%; text-align:center; box-shadow:0 25px 70px rgba(0,0,0,0.3); animation:popIn 0.3s ease; }
+        @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+        .modal-box .icon-ok { font-size:4rem; margin-bottom:15px; }
+        .modal-box h2 { font-family:'Montserrat',sans-serif; font-size:1.7rem; margin-bottom:12px; }
+        .modal-recap { background:#f0f9f0; border-radius:10px; padding:18px 20px; margin:18px 0; text-align:left; font-size:0.92rem; line-height:1.8; }
+        .modal-recap strong { color:var(--primary-color); }
+        .modal-delai { background:#fff8e1; border-radius:8px; padding:12px 15px; font-size:0.88rem; color:#795548; margin-bottom:18px; }
+        .btn-modal-close { background:var(--primary-color); color:white; border:none; padding:12px 35px; border-radius:8px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:1rem; cursor:pointer; }
+        .btn-modal-close:hover { background:#45a049; }
+
+        /* TOAST */
+        .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(80px); background:#333; color:white; padding:12px 24px; border-radius:30px; font-size:0.92rem; z-index:999; transition:transform 0.3s; white-space:nowrap; }
+        .toast.show { transform:translateX(-50%) translateY(0); }
+        .toast.success { background:var(--primary-color); }
+        .toast.error { background:#f44336; }
+
+        /* FOOTER */
+        .footer { background:var(--secondary-color); padding:50px 0 0; text-align:center; }
+        .footer p { margin-bottom:20px; color:var(--light-text); }
+        .social-icons { display:flex; justify-content:center; gap:15px; margin-bottom:20px; }
+        .social-icons a { color:var(--text-color); font-size:1.5rem; }
+
+        /* RESPONSIVE */
+        @media (max-width:768px) {
+            .header .container { flex-direction:column; gap:15px; }
+            .nav ul { flex-wrap:wrap; justify-content:center; gap:15px; }
+            .hero h2 { font-size:1.8rem; }
+            .panier-sidebar { width:100vw; }
+            .form-row { grid-template-columns:1fr; }
+            .modal-produit { grid-template-columns:1fr; }
+            .modal-produit-img { min-height:220px; border-radius:16px 16px 0 0; }
+            .modal-box { padding:30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo"><h1><i class="fas fa-paw"></i> O'poil.com</h1></div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#accueil">Accueil</a></li>
+                    <li><a href="#boutique">Boutique</a></li>
+                    <li><a href="#apropos">À Propos</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="#" onclick="ouvrirPanier(event)">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section id="accueil" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Le Bien-être de vos Compagnons, Notre Priorité</h2>
+                <p>Chez O'poil.com, nous sélectionnons des produits pensés pour le confort et la santé de vos animaux au quotidien.</p>
+                <a href="#boutique" class="btn">Découvrir la boutique</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Boutique -->
+    <section id="boutique" class="section">
+        <div class="container">
+            <h2>Notre Boutique</h2>
+            <div class="produits-grid" id="produits-container"></div>
+        </div>
+    </section>
+
+    <!-- Modal Fiche Produit -->
+    <div class="modal-produit-overlay" id="modal-produit-overlay">
+        <div class="modal-produit" id="modal-produit">
+            <button class="btn-close-modal" id="btn-close-modal">&#x2715;</button>
+            <div class="modal-produit-img">
+                <img id="modal-img" src="" alt="">
+            </div>
+            <div class="modal-produit-body">
+                <span class="modal-produit-badge">&#x1F43E; Bien-être animal</span>
+                <h2 id="modal-nom"></h2>
+                <div class="modal-produit-prix" id="modal-prix"></div>
+                <p class="modal-produit-desc" id="modal-desc"></p>
+                <button class="btn-panier-modal" id="modal-btn-panier">
+                    <i class="fas fa-cart-plus"></i> Ajouter au panier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panier Sidebar -->
+    <div class="panier-overlay" id="panier-overlay"></div>
+    <div class="panier-sidebar" id="panier-sidebar">
+        <div class="panier-sidebar-header">
+            <h3><i class="fas fa-shopping-cart"></i> Mon Panier</h3>
+            <button class="btn-fermer-panier" onclick="fermerPanier()">&#x2715;</button>
+        </div>
+        <div class="panier-sidebar-body" id="panier-sidebar-body">
+            <div class="panier-vide-msg">
+                <i class="fas fa-shopping-cart"></i>
+                Votre panier est vide.
+            </div>
+        </div>
+        <div class="panier-sidebar-footer" id="panier-sidebar-footer" style="display:none;">
+            <div class="panier-total-ligne">
+                <span>Total</span>
+                <span class="montant" id="panier-total-sidebar">0,00 €</span>
+            </div>
+            <button class="btn-checkout-panier" onclick="allerCheckout()">
+                &#x1F4E6; Commander — Entrer mon adresse
+            </button>
+        </div>
+    </div>
+
+    <!-- Section Checkout -->
+    <section id="checkout" class="section" style="display:none;">
+        <div class="container">
+            <h2>Finaliser ma commande</h2>
+            <div id="checkout-recap" style="background:#f9f9f9;border-radius:10px;padding:20px;margin-bottom:25px;"></div>
+            <div class="checkout-section">
+                <h3>&#x1F3E0; Adresse de livraison</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prénom *</label>
+                        <input type="text" id="prenom" placeholder="Ahmed">
+                    </div>
+                    <div class="form-group">
+                        <label>Nom *</label>
+                        <input type="text" id="nom" placeholder="Benali">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="email" placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="tel" id="telephone" placeholder="+32 470 000 000">
+                </div>
+                <div class="form-group">
+                    <label>Adresse *</label>
+                    <input type="text" id="adresse" placeholder="Rue et numéro">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ville *</label>
+                        <input type="text" id="ville" placeholder="Bruxelles">
+                    </div>
+                    <div class="form-group">
+                        <label>Code postal *</label>
+                        <input type="text" id="code-postal" placeholder="1000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Pays *</label>
+                    <select id="pays">
+                        <option value="BE">Belgique</option>
+                        <option value="FR">France</option>
+                        <option value="CH">Suisse</option>
+                        <option value="LU">Luxembourg</option>
+                        <option value="MA">Maroc</option>
+                        <option value="DZ">Algérie</option>
+                        <option value="TN">Tunisie</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Note (optionnel)</label>
+                    <input type="text" id="note" placeholder="Instructions spéciales...">
+                </div>
+                <button class="btn-payer" onclick="validerEtPayer()">
+                    Valider et passer au paiement
+                </button>
+                <div id="paypal-button-container" style="margin-top:20px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Confirmation Commande -->
+    <div class="modal-confirmation-overlay" id="modal-confirmation">
+        <div class="modal-box">
+            <div class="icon-ok">&#x2705;</div>
+            <h2>Commande confirmée !</h2>
+            <p style="color:var(--light-text);margin-bottom:5px;">Un email de confirmation vous a été envoyé.</p>
+            <div class="modal-recap" id="modal-recap-content"></div>
+            <div class="modal-delai">
+                Délai estimé : <strong>15 à 25 jours ouvrés</strong> — Livraison offerte
+            </div>
+            <button class="btn-modal-close" onclick="fermerModalConfirmation()">Fermer</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- A Propos -->
+    <section id="apropos" class="section">
+        <div class="container">
+            <h2>À Propos de O'poil.com</h2>
+            <p>O'poil.com est né d'une passion pour les animaux et d'une volonté de proposer des accessoires pensés pour leur bien-être et leur confort au quotidien.</p>
+            <p style="margin-top:10px;">Nous sélectionnons des produits de qualité, sans toxiques, avec des partenaires engagés dans le respect et le soin des animaux de compagnie.</p>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2>Contactez-Nous</h2>
+            <p>Email : <a href="mailto:opoil.question@gmail.com">opoil.question@gmail.com</a></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 O'poil.com. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Init EmailJS
+        emailjs.init('BQQsWdtvIoWIOVmg6');
+
+        // ===== PRODUITS =====
+        const produits = [
+            {
+                id: 'jouet-lin',
+                nom: 'Jouet de Dentition en Lin Tressé',
+                prix: 9.99,
+                image: 'jouet-lin.jpg',
+                descCourte: 'Soulage les gencives et stimule l\'instinct de jeu de votre compagnon.',
+                descLongue: 'Fabriqué à partir de fibres de lin naturel soigneusement tressées, ce jouet est conçu pour accompagner votre animal dans ses moments de jeu tout en prenant soin de ses gencives. Sa texture douce mais résistante soulage les inconforts liés à la dentition et maintient les dents propres. Idéal pour les chiots comme les chiens adultes, il favorise une mastication saine et procure un vrai sentiment de bien-être. Un compagnon de jeu durable qui respecte la sensibilité de votre animal.'
+            },
+            {
+                id: 'brosse-vapeur',
+                nom: 'Brosse Vapeur Autonettoyante',
+                prix: 8.90,
+                image: 'brosse-vapeur.jpg',
+                descCourte: 'Élimine les poils morts en douceur, se nettoie en un clic.',
+                descLongue: 'Cette brosse vapeur révolutionne le toilettage de votre compagnon en combinant douceur et efficacité. Sa technologie vapeur détend le poil et dénoue les noeuds sans tirer, pour une expérience agréable même pour les animaux les plus sensibles. Le système autonettoyant éjecte les poils collectés en une simple pression, rendant chaque séance rapide et sans effort. Offrez à votre animal un soin quotidien qui renforce aussi le lien affectif entre vous.'
+            },
+            {
+                id: 'spray-buccal',
+                nom: 'Spray Buccal Haleine Fraîche',
+                prix: 8.00,
+                image: 'spray-buccal.jpg',
+                descCourte: 'Neutralise les odeurs et prend soin de l\'hygiène dentaire au quotidien.',
+                descLongue: 'Formulé spécialement pour les chiens et chats, ce spray buccal agit en quelques secondes pour neutraliser les mauvaises odeurs et assainir la cavité buccale de votre animal. Sa formule douce, sans alcool et sans produits agressifs, convient à un usage quotidien et protège l\'émail dentaire sur le long terme. Facile à appliquer même sur les animaux récalcitrants, il contribue à prévenir les problèmes de gencives et de tartre. Un geste simple pour le confort et la santé de votre compagnon.'
+            },
+            {
+                id: 'soin-oreilles',
+                nom: 'Gouttes de Soin Auriculaire',
+                prix: 11.00,
+                image: 'soin-oreilles.jpg',
+                descCourte: 'Nettoie et apaise les oreilles en profondeur, prévient les irritations.',
+                descLongue: 'Ces gouttes auriculaires sont formulées pour offrir un nettoyage doux et complet des oreilles de votre animal, une zone souvent négligée mais essentielle à son confort. Leur action apaisante réduit les irritations, élimine l\'excès de cérumen et prévient l\'apparition d\'infections fréquentes chez les chiens et chats à oreilles tombantes. La solution ne pique pas et sèche rapidement, pour un soin sans stress et sans inconfort. Votre compagnon retrouve un confort auriculaire durable dès les premières applications.'
+            }
+        ];
+
+        // ===== PANIER =====
+        let panier = JSON.parse(localStorage.getItem('panier')) || [];
+        let paypalRendered = false;
+
+        function sauvegarderPanier() {
+            localStorage.setItem('panier', JSON.stringify(panier));
+            mettreAJourCompteur();
+            renderPanierSidebar();
+        }
+
+        function mettreAJourCompteur() {
+            document.getElementById('cart-count').textContent = panier.reduce(function(s,i){ return s + i.quantite; }, 0);
+        }
+
+        function ajouterAuPanier(idProduit) {
+            var produit = produits.find(function(p){ return p.id === idProduit; });
+            if (!produit) return;
+            var existing = panier.find(function(i){ return i.id === idProduit; });
+            if (existing) {
+                existing.quantite += 1;
+            } else {
+                panier.push(Object.assign({}, produit, {quantite: 1}));
+            }
+            sauvegarderPanier();
+            showToast('Ajouté au panier : ' + produit.nom, 'success');
+            fermerModalProduit();
+            ouvrirPanier();
+        }
+
+        function supprimerDuPanier(idProduit) {
+            panier = panier.filter(function(i){ return i.id !== idProduit; });
+            sauvegarderPanier();
+        }
+
+        function changerQuantite(idProduit, delta) {
+            var item = panier.find(function(i){ return i.id === idProduit; });
+            if (!item) return;
+            item.quantite += delta;
+            if (item.quantite <= 0) {
+                panier = panier.filter(function(i){ return i.id !== idProduit; });
+            }
+            sauvegarderPanier();
+        }
+
+        function calculerTotal() {
+            return panier.reduce(function(s,i){ return s + i.prix * i.quantite; }, 0).toFixed(2);
+        }
+
+        // ===== MODAL PRODUIT =====
+        function ouvrirModalProduit(idProduit) {
+            var p = produits.find(function(pr){ return pr.id === idProduit; });
+            if (!p) return;
+            document.getElementById('modal-img').src = p.image;
+            document.getElementById('modal-img').alt = p.nom;
+            document.getElementById('modal-nom').textContent = p.nom;
+            document.getElementById('modal-prix').textContent = p.prix.toFixed(2) + ' €';
+            document.getElementById('modal-desc').textContent = p.descLongue;
+            document.getElementById('modal-btn-panier').onclick = function(){ ajouterAuPanier(idProduit); };
+            document.getElementById('modal-produit-overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function fermerModalProduit() {
+            document.getElementById('modal-produit-overlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // ===== PANIER SIDEBAR =====
+        function ouvrirPanier(e) {
+            if (e) e.preventDefault();
+            document.getElementById('panier-overlay').classList.add('open');
+            document.getElementById('panier-sidebar').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function fermerPanier() {
+            document.getElementById('panier-overlay').classList.remove('open');
+            document.getElementById('panier-sidebar').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function renderPanierSidebar() {
+            var body = document.getElementById('panier-sidebar-body');
+            var footer = document.getElementById('panier-sidebar-footer');
+            if (panier.length === 0) {
+                body.innerHTML = '<div class="panier-vide-msg"><i class="fas fa-shopping-cart"></i><br>Votre panier est vide.</div>';
+                footer.style.display = 'none';
+                return;
+            }
+            footer.style.display = 'block';
+            document.getElementById('panier-total-sidebar').textContent = calculerTotal() + ' \u20ac';
+            body.innerHTML = panier.map(function(item){
+                return '<div class="panier-item">'
+                    + '<img src="' + item.image + '" alt="' + item.nom + '" onerror="this.src=\'data:image/svg+xml,%3Csvg xmlns=\\\'http://www.w3.org/2000/svg\\\' viewBox=\\\'0 0 70 70\\\'%3E%3Crect fill=\\\'%23eee\\\' width=\\\'70\\\' height=\\\'70\\\'/%3E%3Ctext x=\\\'35\\\' y=\\\'42\\\' text-anchor=\\\'middle\\\' font-size=\\\'28\\\'%3E%3C/text%3E%3C/svg%3E\'">'
+                    + '<div class="panier-item-info">'
+                    + '<h4>' + item.nom + '</h4>'
+                    + '<div class="item-prix">' + (item.prix * item.quantite).toFixed(2) + ' \u20ac</div>'
+                    + '<div class="qty-control">'
+                    + '<button onclick="changerQuantite(\'' + item.id + '\',-1)">\u2212</button>'
+                    + '<span>' + item.quantite + '</span>'
+                    + '<button onclick="changerQuantite(\'' + item.id + '\',+1)">+</button>'
+                    + '</div></div>'
+                    + '<button class="btn-supprimer-item" onclick="supprimerDuPanier(\'' + item.id + '\')"><i class="fas fa-trash"></i></button>'
+                    + '</div>';
+            }).join('');
+        }
+
+        // ===== CHECKOUT =====
+        function allerCheckout() {
+            if (panier.length === 0) return;
+            fermerPanier();
+            var section = document.getElementById('checkout');
+            section.style.display = 'block';
+            var recap = document.getElementById('checkout-recap');
+            var lignes = panier.map(function(i){
+                return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;font-size:0.95rem;">'
+                    + '<span>' + i.nom + ' × ' + i.quantite + '</span>'
+                    + '<strong>' + (i.prix * i.quantite).toFixed(2) + ' \u20ac</strong></div>';
+            }).join('');
+            recap.innerHTML = '<h3 style="font-family:Montserrat,sans-serif;margin-bottom:15px;color:var(--primary-color);">Récapitulatif</h3>'
+                + lignes
+                + '<div style="display:flex;justify-content:space-between;padding:12px 0 0;font-family:Montserrat,sans-serif;font-weight:700;font-size:1.1rem;">'
+                + '<span>Total</span><span style="color:var(--primary-color);">' + calculerTotal() + ' \u20ac</span></div>';
+            section.scrollIntoView({behavior:'smooth'});
+            paypalRendered = false;
+            document.getElementById('paypal-button-container').innerHTML = '';
+        }
+
+        function validerEtPayer() {
+            var prenom = document.getElementById('prenom').value.trim();
+            var nom = document.getElementById('nom').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var adresse = document.getElementById('adresse').value.trim();
+            var ville = document.getElementById('ville').value.trim();
+            var codePostal = document.getElementById('code-postal').value.trim();
+            var pays = document.getElementById('pays').value;
+            var telephone = document.getElementById('telephone').value.trim();
+            var note = document.getElementById('note').value.trim();
+
+            if (!prenom || !nom || !email || !adresse || !ville || !codePostal) {
+                showToast('Remplissez tous les champs obligatoires.', 'error'); return;
+            }
+            if (email.indexOf('@') === -1) {
+                showToast('Email invalide.', 'error'); return;
+            }
+            if (paypalRendered) return;
+            paypalRendered = true;
+
+            var total = calculerTotal();
+            var numeroCommande = 'OPL-' + Date.now().toString().slice(-7);
+            var paysNoms = {BE:'Belgique',FR:'France',CH:'Suisse',LU:'Luxembourg',MA:'Maroc',DZ:'Algérie',TN:'Tunisie'};
+
+            paypal.Buttons({
+                style: {layout:'vertical', color:'gold', shape:'rect', label:'pay'},
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {value: total},
+                            description: "Commande O'poil.com " + numeroCommande,
+                            shipping: {
+                                name: {full_name: prenom + ' ' + nom},
+                                address: {address_line_1: adresse, admin_area_2: ville, postal_code: codePostal, country_code: pays}
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function() {
+                        var articlesTexte = panier.map(function(i){
+                            return '- ' + i.nom + ' x' + i.quantite + ' = ' + (i.prix * i.quantite).toFixed(2) + ' EUR';
+                        }).join('\n');
+                        var message = 'NOUVELLE COMMANDE OPOIL.COM\n'
+                            + 'Numero : ' + numeroCommande + '\n'
+                            + 'Date : ' + new Date().toLocaleDateString('fr-FR') + '\n\n'
+                            + 'CLIENT\n'
+                            + 'Email : ' + email + '\n'
+                            + 'Tel : ' + (telephone || 'Non renseigne') + '\n\n'
+                            + 'ADRESSE\n'
+                            + prenom + ' ' + nom + '\n'
+                            + adresse + '\n'
+                            + codePostal + ' ' + ville + '\n'
+                            + (paysNoms[pays] || pays) + '\n\n'
+                            + 'ARTICLES\n' + articlesTexte + '\n\n'
+                            + 'Total : ' + total + ' EUR\n'
+                            + 'Note : ' + (note || 'Aucune');
+
+                        emailjs.send('service_yojc9b9', 'template_btlq6g2', {
+                            name: prenom + ' ' + nom,
+                            message: message
+                        }).catch(function(e){ console.error('EmailJS:', e); });
+
+                        var commandes = JSON.parse(localStorage.getItem('commandes_admin') || '[]');
+                        commandes.push({numeroCommande:numeroCommande, prenom:prenom, nom:nom, email:email, adresse:adresse, ville:ville, codePostal:codePostal, pays:pays, panier:panier.slice(), total:total, note:note, date:new Date().toISOString()});
+                        localStorage.setItem('commandes_admin', JSON.stringify(commandes));
+
+                        var recapHtml = '<strong>Commande n°</strong> ' + numeroCommande + '<br>'
+                            + '<strong>Client :</strong> ' + prenom + ' ' + nom + '<br>'
+                            + '<strong>Email :</strong> ' + email + '<br>'
+                            + '<strong>Livraison :</strong> ' + adresse + ', ' + codePostal + ' ' + ville + ', ' + (paysNoms[pays]||pays) + '<br>'
+                            + '<hr style="margin:10px 0;border-color:#ddd;">'
+                            + panier.map(function(i){ return i.nom + ' × ' + i.quantite + ' — ' + (i.prix*i.quantite).toFixed(2) + ' €'; }).join('<br>')
+                            + '<br><strong style="font-size:1.05rem;">Total : ' + total + ' €</strong>';
+                        document.getElementById('modal-recap-content').innerHTML = recapHtml;
+                        document.getElementById('modal-confirmation').classList.add('visible');
+
+                        panier = [];
+                        sauvegarderPanier();
+                        document.getElementById('checkout').style.display = 'none';
+                        document.getElementById('paypal-button-container').innerHTML = '';
+                        paypalRendered = false;
+                    });
+                },
+                onError: function() {
+                    showToast('Erreur de paiement. Réessayez.', 'error');
+                    paypalRendered = false;
+                }
+            }).render('#paypal-button-container');
+            document.getElementById('paypal-button-container').scrollIntoView({behavior:'smooth'});
+        }
+
+        function fermerModalConfirmation() {
+            document.getElementById('modal-confirmation').classList.remove('visible');
+        }
+
+        // ===== AFFICHAGE PRODUITS =====
+        function afficherProduits() {
+            var placeholder = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 300 250\'%3E%3Crect fill=\'%23f5f5f5\' width=\'300\' height=\'250\'/%3E%3Ctext x=\'150\' y=\'120\' text-anchor=\'middle\' font-size=\'55\'%3E%3C/text%3E%3Ctext x=\'150\' y=\'165\' text-anchor=\'middle\' font-size=\'13\' fill=\'%23aaa\'%3EPhoto a venir%3C/text%3E%3C/svg%3E';
+            document.getElementById('produits-container').innerHTML = produits.map(function(p){
+                return '<div class="produit-card" onclick="ouvrirModalProduit(\'' + p.id + '\')">'
+                    + '<div class="card-img-wrap">'
+                    + '<img src="' + p.image + '" alt="' + p.nom + '" onerror="this.src=\'' + placeholder + '\'">'
+                    + '</div>'
+                    + '<div class="card-body">'
+                    + '<h3>' + p.nom + '</h3>'
+                    + '<p class="desc-courte">' + p.descCourte + '</p>'
+                    + '<p class="prix">' + p.prix.toFixed(2) + ' \u20ac</p>'
+                    + '<div class="card-btns">'
+                    + '<button class="btn-voir" onclick="event.stopPropagation();ouvrirModalProduit(\'' + p.id + '\')">Voir le produit</button>'
+                    + '<button class="btn-panier" onclick="event.stopPropagation();ajouterAuPanier(\'' + p.id + '\')">+ Panier</button>'
+                    + '</div></div></div>';
+            }).join('');
+        }
+
+        // ===== TOAST =====
+        function showToast(msg, type) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + (type||'') + ' show';
+            setTimeout(function(){ t.classList.remove('show'); }, 3000);
+        }
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fermer modal produit via overlay
+            document.getElementById('modal-produit-overlay').addEventListener('click', function(e){
+                if (e.target === this) fermerModalProduit();
+            });
+            // Fermer via bouton X
+            document.getElementById('btn-close-modal').addEventListener('click', fermerModalProduit);
+            // Fermer panier via overlay
+            document.getElementById('panier-overlay').addEventListener('click', fermerPanier);
+
+            mettreAJourCompteur();
+            afficherProduits();
+            renderPanierSidebar();
+        });
+    </script>
+</body>
+</html>
