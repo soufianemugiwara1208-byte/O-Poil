@@ -1,0 +1,8 @@
+{
+  "name": "opoil-store",
+  "version": "1.0.0",
+  "description": "O'poil.com - Boutique bien-être animal",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}
